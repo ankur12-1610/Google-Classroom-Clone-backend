@@ -1,71 +1,52 @@
 from rest_framework import serializers
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
-from api.serializers import *
+from .utils import get_and_authenticate_user
+from django.contrib.auth import password_validation, get_user_model
+from rest_framework.validators import UniqueValidator
+
+UserModel = get_user_model()
 
 
-def create_auth_token(user):
-    token, created = Token.objects.get_or_create(user=user)
-    return token
-    
 class TokenSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=500)
 
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
-    password = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        username = data['username']
-        password = data['password']
-        user = authenticate(username=username, password=password)
-        if not user:
-            raise serializers.ValidationError("Invalid Credentials!")
-        return data
-    
-    def get_token(self):
-        username = self.validated_data['username']
-        user = User.objects.get(username=username)
-        return TokenSerializer({
-            'token': create_auth_token(user),
-        })
+        username = data.get('username', None)
+        password = data.get('password')
+        if username and password:
+            user = get_and_authenticate_user(username, password)
+            if not user.is_active:
+                error = 'User account is disabled.'
+                raise serializers.ValidationError(error)
+            data['user'] = user
+            return data
+        else:
+            error = 'Must include username and password'
+            raise serializers.ValidationError(error)
 
 
-class RegisterSerializer(serializers.Serializer):
+class RegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        validators=[UniqueValidator(queryset=UserModel.objects.all())])
 
-    password = serializers.CharField(max_length=128, min_length=8, write_only=True)
-    email=serializers.EmailField(required=True)
-    first_name=serializers.CharField(required=True)
-    last_name=serializers.CharField(required=True)
-    username = serializers.CharField(required=True)
-    
-    def validate_username(self, username):
-        if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError("Username already exists!")
-        return username
+    class Meta:
+        model = UserModel
+        fields = ('id', 'email', 'password', 'name', 'username')
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'id':  {'required': False, 'read_only': True}
+        }
 
-    def validate_email(self, email):
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError("Email already exists!")
-        return email
-
-    def register(self):
-        data=self.validated_data
-        username=data['username']
-        email=data['email']
-        password=data['password']
-        user=User.objects.create_user(username=username, email=email, password=password)
-        user.first_name=data['first_name']
-        user.last_name=data['last_name']
-        user.save()
-
-        return TokenSerializer({
-            'token': create_auth_token(user)
-        })
+    def create(self, validated_data):
+        user = UserModel.objects.create_user(**validated_data)
+        return user
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['username', 'first_name','last_name', 'email', 'password']
+        model = UserModel
+        fields = ('id', 'email', 'username', 'name')
