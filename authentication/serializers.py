@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .utils import get_and_authenticate_user
+from django.utils import get_and_authenticate_user
 from django.contrib.auth import password_validation, get_user_model
 from rest_framework.validators import UniqueValidator
 
