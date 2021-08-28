@@ -1,5 +1,7 @@
 from rest_framework import permissions, serializers
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.generics import *
 from rest_framework import status
 from rest_framework import response
@@ -26,6 +28,7 @@ class LoginView(generics.GenericAPIView):
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -41,3 +44,16 @@ class UserProfileView(generics.RetrieveAPIView):
     def get(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+    
+# class LogoutView(APIView):
+#     permission_classes = (IsAuthenticated,)
+
+#     def post(self, request):
+#         try:
+#             refresh_token = request.data["refresh_token"]
+#             token = RefreshToken(refresh_token)
+#             token.blacklist()
+
+#             return Response(status=status.HTTP_205_RESET_CONTENT)
+#         except Exception as e:
+#             return Response(status=status.HTTP_400_BAD_REQUEST)
