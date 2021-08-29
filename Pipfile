@@ -12,6 +12,9 @@ django-cors-headers = "*"
 django-heroku = "*"
 gunicorn = "*"
 drf-yasg = "*"
+social-auth-app-django = "*"
+djangorestframework-oauth = "*"
+rest-social-auth = "*"
 
 [requires]
 python_version = "3.8"

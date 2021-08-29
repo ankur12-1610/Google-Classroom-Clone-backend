@@ -1,3 +1,5 @@
+from django.contrib.auth import logout as django_logout
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions, serializers
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -11,9 +13,6 @@ from rest_framework.authtoken.models import Token
 from django.contrib import auth
 from .serializers import (
     LoginSerializer, RegisterSerializer, UserSerializer, TokenSerializer)
-
-
-
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -46,15 +45,33 @@ class UserProfileView(generics.RetrieveAPIView):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
     
-# class LogoutView(APIView):
-#     permission_classes = (IsAuthenticated,)
+class UserStatus(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        return Response({'status': 'ok'})
 
-#     def post(self, request):
-#         try:
-#             refresh_token = request.data["refresh_token"]
-#             token = RefreshToken(refresh_token)
-#             token.blacklist()
+class LogoutView(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+ 
+    def logout(self, request):
+        try:
+            request.user.auth_token.delete()
+        except (AttributeError, ObjectDoesNotExist):
+            pass
+        if getattr(settings, 'REST_SESSION_LOGIN', True):
+            django_logout(request)
 
-#             return Response(status=status.HTTP_205_RESET_CONTENT)
-#         except Exception as e:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
+        response = Response({"detail": ("Successfully logged out.")},
+                            status=status.HTTP_200_OK)
+        return response
+    
+    def post(self, request, *args, **kwargs):
+        return self.logout(request)
+
+class UserStatusView(APIView):
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return Response(True, status=status.HTTP_200_OK)
+        else:
+            return Response(False, status=status.HTTP_400_BAD_REQUEST)

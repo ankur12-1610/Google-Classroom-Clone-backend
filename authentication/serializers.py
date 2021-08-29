@@ -12,6 +12,7 @@ def create_auth_token(user):
 class TokenSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=500)
 
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
@@ -64,8 +65,8 @@ class RegisterSerializer(serializers.Serializer):
             'token': create_auth_token(user)
         })
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'first_name','last_name', 'email', 'password']
+
