@@ -11,9 +11,9 @@ class ClassroomSerializer(serializers.ModelSerializer):
         data = self.validated_data
         user = self.context['request'].user
         title = data['title']
-        todo = Classroom.objects.create(teacher=user, title=title)
-        todo.save()
-        
+        classroom = Classroom.objects.create(teacher=user, title=title)
+        classroom.save()
+
     class Meta:
         model = Classroom
         fields = ('id', 'title', 'teacher', 'teacher_id', 'classroom_color')
@@ -29,6 +29,14 @@ class StudentSerializer(serializers.ModelSerializer):
 class AssignmentSerializer(serializers.ModelSerializer):
     teacher = serializers.CharField(source = 'teacher.username', required = False, read_only = True)
     assignment_id = serializers.IntegerField(source = 'assignment.id', required = False, read_only = True)
+
+    def save(self, **kwargs):
+        data = self.validated_data
+        user = self.context['request'].user
+        title = data['title']
+        assignment = Assignment.objects.create(teacher=user, title=title)
+        assignment.save()
+
     classroom = serializers.CharField(source = 'classroom.title', required = False, read_only = True)
     classroom_id = serializers.IntegerField(source = 'classroom.id', required = False, read_only = True)
     class Meta:

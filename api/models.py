@@ -38,25 +38,25 @@ class Assignment(models.Model):
     title = models.CharField(max_length=255)
     deadline = models.DateTimeField(default=datetime.now, blank=True)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null = True)
-    
+    score = models.CharField(max_length=255, default="ungraded")
     # Score choices codes:
-    UNGRADED = 0
-    POOR = 1
-    BELOW_AVERAGE = 2
-    AVERAGE = 3
-    GOOD = 4
-    EXCELLENT = 5
+    # UNGRADED = 0
+    # POOR = 1
+    # BELOW_AVERAGE = 2
+    # AVERAGE = 3
+    # GOOD = 4
+    # EXCELLENT = 5
 
-    SCORE_CHOICES = (
-        (str(UNGRADED), 'Ungraded'),
-        (str(POOR), ('1 - Very Poor')),
-        (str(BELOW_AVERAGE), ('2 - Below Average')),
-        (str(AVERAGE), ('3 - Average')),
-        (str(GOOD), ('4 - Good')),
-        (str(EXCELLENT), ('5 - Excellent'))
-    )
+    # SCORE_CHOICES = (
+    #     (str(UNGRADED), 'Ungraded'),
+    #     (str(POOR), ('1 - Very Poor')),
+    #     (str(BELOW_AVERAGE), ('2 - Below Average')),
+    #     (str(AVERAGE), ('3 - Average')),
+    #     (str(GOOD), ('4 - Good')),
+    #     (str(EXCELLENT), ('5 - Excellent'))
+    # )
 
-    score = models.BooleanField(choices=SCORE_CHOICES)
+    # score = models.BooleanField(choices=SCORE_CHOICES, default=UNGRADED)
 
     def __str__(self):
         return self.title
