@@ -6,9 +6,15 @@ from authentication.serializers import *
 class ClassroomSerializer(serializers.ModelSerializer):
     teacher = serializers.CharField(source = 'teacher.username', required = False, read_only = True)
     teacher_id = serializers.IntegerField(source = 'teacher.id', required = False, read_only = True)
+    # def save(self, **kwargs):
+    #     data = self.validated_data
+    #     user = self.context['request'].user
+    #     title = data['title']
+    #     todo = Classroom.objects.create(teacher=user, title=title)
+    #     todo.save()
     class Meta:
         model = Classroom
-        fields = ('id', 'title','teacher', 'teacher_id', 'classroom_color')
+        fields = ('id', 'title', 'teacher', 'teacher_id', 'classroom_color')
 
 class StudentSerializer(serializers.ModelSerializer):
     classroom = serializers.CharField(source = 'classroom.title', required = False, read_only = True)

@@ -50,9 +50,9 @@ class UserStatus(generics.GenericAPIView):
     def get(self, request):
         return Response({'status': 'ok'})
 
-class LogoutView(generics.GenericAPIView):
+class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
- 
+
     def logout(self, request):
         try:
             request.user.auth_token.delete()

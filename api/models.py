@@ -1,28 +1,26 @@
 from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
-from django.db.models.expressions import When
-
 
 class Classroom(models.Model):
 #a class is created by teacher(user)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
     title = models.CharField(max_length=255)
-    
-    #color choices code
-    BLUE=0
-    RED=1
-    VIOLET=2
-    GREEN=3
-    
-    PROFILE_PICTURE_CHOICES = (
-        (str(BLUE), 'Blue-theme'),
-        (str(RED), 'Red-theme'),
-        (str(VIOLET), 'Violet-theme'),
-        (str(GREEN), 'Green-theme'),
-    )
+    classroom_color = models.CharField(max_length=255, default='#ffffff')
 
-    classroom_color = models.BooleanField(choices=PROFILE_PICTURE_CHOICES, default=False)
+    # #color choices code
+    # BLUE=0
+    # RED=1
+    # VIOLET=2
+    # GREEN=3
+    
+    # PROFILE_PICTURE_CHOICES = (
+    #     (str(BLUE), 'Blue-theme'),
+    #     (str(RED), 'Red-theme'),
+    #     (str(VIOLET), 'Violet-theme'),
+    #     (str(GREEN), 'Green-theme'),
+    # )
+
     def __str__(self):
         return self.title
  
@@ -50,7 +48,7 @@ class Assignment(models.Model):
     EXCELLENT = 5
 
     SCORE_CHOICES = (
-        (UNGRADED, 'Ungraded'),
+        (str(UNGRADED), 'Ungraded'),
         (str(POOR), ('1 - Very Poor')),
         (str(BELOW_AVERAGE), ('2 - Below Average')),
         (str(AVERAGE), ('3 - Average')),
@@ -58,7 +56,7 @@ class Assignment(models.Model):
         (str(EXCELLENT), ('5 - Excellent'))
     )
 
-    score = models.BooleanField(choices=SCORE_CHOICES, default=False)
+    score = models.BooleanField(choices=SCORE_CHOICES)
 
     def __str__(self):
         return self.title
