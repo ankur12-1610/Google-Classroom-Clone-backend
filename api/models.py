@@ -6,7 +6,7 @@ class Classroom(models.Model):
 #a class is created by teacher(user)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
     title = models.CharField(max_length=255)
-    classroom_color = models.CharField(max_length=255, default='#ffffff')
+    classroom_color = models.CharField(max_length=255, default="blue")
 
     # #color choices code
     # BLUE=0
