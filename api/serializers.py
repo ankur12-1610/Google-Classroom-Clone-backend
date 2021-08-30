@@ -1,7 +1,8 @@
-from rest_framework import serializers
+from rest_framework import  serializers
 from .models import *
 from django.contrib.auth.models import User
 from authentication.serializers import *
+
 
 class ClassroomSerializer(serializers.ModelSerializer):
     teacher = serializers.CharField(source = 'teacher.username', required = False, read_only = True)
@@ -16,7 +17,7 @@ class ClassroomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Classroom
-        fields = ('id', 'title', 'teacher', 'teacher_id', 'classroom_color')
+        fields = ('id', 'title', 'teacher', 'teacher_id', 'classroom_color','classroom_link')
 
 class StudentSerializer(serializers.ModelSerializer):
     classroom = serializers.CharField(source = 'classroom.title', required = False, read_only = True)
@@ -51,3 +52,17 @@ class AssignmentStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = AssignmentStatus
         fields = ('assignment_id','assignment','student','student_id','status',)
+
+
+# class ImageSerializer(serializers.ModelSerializer):
+#     image = serializers.ImageField(
+#         sizes = {
+#             'small': (300, 300),
+#             'medium': (500, 500),
+#             'large': (700, 700),
+#         },required=True,
+#     )
+
+#     class Meta:
+#         model = Image
+#         fields = ['pk', 'name', 'image']

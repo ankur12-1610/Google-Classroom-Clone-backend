@@ -7,7 +7,7 @@ class Classroom(models.Model):
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
     title = models.CharField(max_length=255)
     classroom_color = models.CharField(max_length=255, default="blue")
-
+    classroom_link = models.CharField(max_length=255, default="None")
     # #color choices code
     # BLUE=0
     # RED=1
@@ -73,3 +73,12 @@ class AssignmentStatus(models.Model):
 
     def __str__(self):
         return self.student.username
+
+#for images
+
+# class Image(models.Model):
+#     name = models.CharField(max_length=255)
+#     # image = models.ImageField(max_length=800, null=True, use_url='images/')
+#     image = models.CharFieField(max_length=800, null=True)
+#     def __str__(self):
+#         return self.name

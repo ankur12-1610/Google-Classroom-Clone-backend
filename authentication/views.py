@@ -24,8 +24,6 @@ class LoginView(generics.GenericAPIView):
         response = serializer.get_token()
         return Response(response.data, status=status.HTTP_200_OK)
 
-
-
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
     permission_classes = (AllowAny,)

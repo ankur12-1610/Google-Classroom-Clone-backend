@@ -13,6 +13,13 @@ from django.http import Http404
 
 
 class ClassroomViewSet(viewsets.ModelViewSet):
+    """
+        Classroom_colors:
+        BLUE=0
+        RED=1
+        VIOLET=2
+        GREEN=3
+    """
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ClassroomSerializer
     
@@ -37,6 +44,7 @@ class StudentViewSet(viewsets.ModelViewSet):
         return Student.objects.all()
 
 class AssignmentViewSet(viewsets.ModelViewSet):
+
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = AssignmentSerializer
 
@@ -62,3 +70,14 @@ class AssignmentStatusViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return AssignmentStatus.objects.all()
+
+# class ImageViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     serializer_class = ImageSerializer
+
+#     def create(self, request, *args, **kwargs):
+#         return super().create(request, *args, **kwargs)
+
+
+#     def get_queryset(self):
+#         return Image.objects.all()

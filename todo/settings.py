@@ -121,7 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -151,5 +150,8 @@ SWAGGER_SETTINGS = {
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'staticfiles/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 django_heroku.settings(locals())
