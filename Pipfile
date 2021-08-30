@@ -16,7 +16,6 @@ social-auth-app-django = "*"
 djangorestframework-oauth = "*"
 rest-social-auth = "*"
 pillow = "*"
-drf-flex-fields = "*"
 
 [requires]
 python_version = "3.8"
